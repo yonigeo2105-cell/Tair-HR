@@ -57,12 +57,12 @@ if menu == "זימון לראיון":
         time_str = interview_time.strftime('%H:%M')
         day_hebrew = get_hebrew_day(interview_date)
         
-        # הנוסח המדויק שביקשת
+        # הודעה מתוקנת עם אשר/י
         message_body = (
             f"היי {candidate_name}, זאת תאיר ממשרד עורכי דין י.שפירא.\n"
             f"בהמשך לשיחתנו נקבע ראיון עבודה ליום {day_hebrew} בתאריך ה-{date_str} בשעה {time_str}.\n"
             f"כתובתנו נירים 4 תל אביב. אני יושבת בקומה ה-2.\n\n"
-            f"לכל שאלה אני זמינה במספר הזה, אנא אשרי את קבלת ההודעה."
+            f"לכל שאלה אני זמינה במספר הזה, אנא אשר/י את קבלת ההודעה."
         )
         
         st.info("תצוגה מקדימה להודעה:")
@@ -103,7 +103,6 @@ elif menu == "ימי הולדת":
             
             video_text = f"\n\n🎬 הכנו לך משהו קטן: {video_link}" if video_link else ""
 
-            # החתימה שונתה ל"אוהבים משרד י.שפירא..."
             st.subheader("בחר סגנון ברכה:")
             wishes_options = {
                 "רשמי וחם": f"מזל טוב {selected_employee}! 🎉\nיום הולדת שמח! מאחלים לך שנה של צמיחה, הצלחות והמון רגעים מאושרים.\nשמחים שאת/ה חלק מהצוות שלנו.\n\nאוהבים משרד י.שפירא ושות' עורכי דין{video_text}",
