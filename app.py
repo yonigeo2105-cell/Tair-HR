@@ -12,12 +12,11 @@ VIDEO_URL = "https://youtu.be/j5F708M4by0"
 # --- הגדרות עמוד ---
 st.set_page_config(page_title="Shapira Law HR", layout="wide", page_icon="⚖️")
 
-# --- עיצוב CSS מתקדם (כפתורים במקום עיגולים) ---
+# --- עיצוב CSS מתקדם ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
 
-    /* הגדרות בסיס */
     html, body, [class*="css"] {
         font-family: 'Assistant', sans-serif;
         direction: rtl;
@@ -32,7 +31,6 @@ st.markdown("""
         background-color: transparent;
     }
 
-    /* עיצוב עמודת התפריט */
     .menu-container {
         background-color: #ffffff;
         padding: 20px;
@@ -42,36 +40,13 @@ st.markdown("""
         height: 100%;
     }
     
-    h1 {
-        color: #880e4f;
-        font-weight: 800;
-        margin-bottom: 0;
-        font-size: 2.2rem;
-    }
-    
-    h3 {
-        color: #ad1457;
-        font-size: 1.1rem;
-        margin-top: 5px;
-        font-weight: 400;
-    }
-    
-    h2 {
-        color: #880e4f;
-        font-size: 1.8rem;
-        margin-bottom: 25px;
-        border-bottom: 2px solid #fce4ec;
-        padding-bottom: 10px;
-    }
+    h1 { color: #880e4f; font-weight: 800; margin-bottom: 0; font-size: 2.2rem; }
+    h3 { color: #ad1457; font-size: 1.1rem; margin-top: 5px; font-weight: 400; }
+    h2 { color: #880e4f; font-size: 1.8rem; margin-bottom: 25px; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
 
-    /* --- העלמת העיגול והפיכת האופציות לכפתורים --- */
-    
-    /* העלמת העיגול (Radio Circle) */
-    div[role="radiogroup"] > label > div:first-child {
-        display: none !important;
-    }
+    /* כפתורי תפריט ללא עיגול */
+    div[role="radiogroup"] > label > div:first-child { display: none !important; }
 
-    /* עיצוב הכפתור עצמו */
     div[role="radiogroup"] > label {
         background-color: #ffffff;
         border: 1px solid #f1f3f5;
@@ -82,7 +57,7 @@ st.markdown("""
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         cursor: pointer;
         display: flex;
-        justify-content: center; /* יישור טקסט למרכז */
+        justify-content: center;
         align-items: center;
     }
 
@@ -92,7 +67,6 @@ st.markdown("""
         transform: translateY(-2px);
     }
     
-    /* עיצוב כפתור שנבחר (Active State) */
     div[role="radiogroup"] > label[data-checked="true"] {
         background: linear-gradient(45deg, #d81b60, #ec407a);
         color: white !important;
@@ -100,12 +74,8 @@ st.markdown("""
         box-shadow: 0 5px 15px rgba(216, 27, 96, 0.3);
     }
     
-    div[role="radiogroup"] > label[data-checked="true"] p {
-        color: white !important;
-        font-weight: 700;
-    }
+    div[role="radiogroup"] > label[data-checked="true"] p { color: white !important; font-weight: 700; }
 
-    /* כפתורי פעולה (שליחה וכו') */
     .stButton>button {
         background: linear-gradient(45deg, #d81b60, #ff80ab);
         color: white;
@@ -119,12 +89,8 @@ st.markdown("""
         transition: transform 0.2s;
     }
     
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(216, 27, 96, 0.3);
-    }
+    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(216, 27, 96, 0.3); }
 
-    /* קופסאות תוכן */
     .content-box {
         background-color: white;
         padding: 30px;
@@ -132,7 +98,6 @@ st.markdown("""
         box-shadow: 0 10px 30px rgba(0,0,0,0.03);
         border: 1px solid #f8f9fa;
     }
-
     </style>
     """, unsafe_allow_html=True)
 
@@ -148,9 +113,18 @@ def create_whatsapp_link(phone, message):
     encoded_message = urllib.parse.quote(message)
     return f"https://wa.me/{clean_phone}?text={encoded_message}"
 
+# 🔥 כאן התיקון הקריטי 🔥
 def load_data():
     if os.path.exists('employees.csv'):
-        return pd.read_csv('employees.csv', dtype={'טלפון': str})
+        # קריאת הקובץ
+        df = pd.read_csv('employees.csv', dtype={'טלפון': str})
+        
+        # המרה כפויה של עמודת התאריך לפורמט תאריך אמיתי
+        # זה מונע את הקריסה בטבלה
+        if "תאריך לידה" in df.columns:
+            df["תאריך לידה"] = pd.to_datetime(df["תאריך לידה"], errors='coerce')
+            
+        return df
     return pd.DataFrame(columns=["שם העובד", "תאריך לידה", "טלפון"])
 
 def save_data(df):
@@ -171,9 +145,7 @@ def normalize_columns(df):
 # --- פריסת עמוד ---
 menu_col, content_col = st.columns([1, 4])
 
-# ==========================
-# תפריט (ימין)
-# ==========================
+# --- תפריט ---
 with menu_col:
     st.markdown("""
         <div style="text-align: center; padding: 20px 0;">
@@ -188,9 +160,7 @@ with menu_col:
         label_visibility="collapsed"
     )
 
-# ==========================
-# תוכן (שמאל)
-# ==========================
+# --- תוכן ---
 with content_col:
     with st.container():
         st.markdown('<div class="content-box">', unsafe_allow_html=True)
@@ -234,9 +204,7 @@ with content_col:
             
             df = load_data()
             if not df.empty:
-                df['תאריך לידה'] = pd.to_datetime(df['תאריך לידה'], errors='coerce')
                 names = df['שם העובד'].tolist()
-                
                 selected = st.selectbox("למי חוגגים?", names)
                 
                 if selected:
