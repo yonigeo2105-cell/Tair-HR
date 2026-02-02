@@ -4,10 +4,63 @@ from datetime import datetime
 import urllib.parse
 import os
 
-# --- הגדרות עיצוב וכותרת ---
+# --- הגדרות עמוד ---
 st.set_page_config(page_title="HR Manager - Shapira Law", layout="centered", page_icon="⚖️")
 
-st.title("⚖️ HR Manager - משרד י.שפירא ושות'")
+# --- עיצוב מותאם אישית (CSS) ---
+st.markdown("""
+    <style>
+    /* רקע כללי לאפליקציה - גרדיאנט עדין */
+    .stApp {
+        background-image: linear-gradient(to bottom right, #fff0f5, #ffffff);
+    }
+    
+    /* עיצוב כותרות */
+    h1 {
+        color: #5D3A5D; /* סגול חציל עמוק */
+        font-family: 'Helvetica Neue', sans-serif;
+        text-align: center;
+        border-bottom: 2px solid #D8BFD8;
+        padding-bottom: 10px;
+    }
+    
+    h2, h3 {
+        color: #8B5F8B; /* סגול בהיר יותר */
+    }
+    
+    /* עיצוב כפתורים */
+    .stButton>button {
+        background-color: #C08497; /* ורוד עתיק */
+        color: white;
+        border-radius: 20px;
+        border: none;
+        padding: 10px 24px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        background-color: #B06D85; /* ורוד כהה יותר במעבר עכבר */
+        color: white;
+        transform: scale(1.02);
+    }
+    
+    /* מסגרות לקלט */
+    .stTextInput>div>div>input {
+        border-radius: 10px;
+        border: 1px solid #D8BFD8;
+    }
+    
+    /* תיקון ליישור טקסט */
+    .css-10trblm {
+        text-align: right;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- כותרת ראשית ---
+st.title("⚖️ HR Manager")
+st.markdown("<h3 style='text-align: center; color: #5D3A5D;'>משרד י.שפירא ושות'</h3>", unsafe_allow_html=True)
 st.markdown("---")
 
 # --- פונקציות עזר ---
@@ -34,6 +87,7 @@ def save_data(df):
     df.to_csv('employees.csv', index=False)
 
 # --- תפריט צד ---
+# עיצוב מותאם לתפריט הצד לא נתמך מלא ב-CSS פשוט, אבל הוא יקבל את הרקע הכללי
 menu = st.sidebar.radio("תפריט ראשי", ["זימון לראיון", "ימי הולדת", "ניהול עובדים"])
 
 # ==========================
@@ -42,14 +96,16 @@ menu = st.sidebar.radio("תפריט ראשי", ["זימון לראיון", "ימ
 if menu == "זימון לראיון":
     st.header("📅 זימון מועמד לראיון")
     
-    col1, col2 = st.columns(2)
-    with col1:
-        candidate_name = st.text_input("שם המועמד/ת")
-        phone_number = st.text_input("מספר טלפון (נייד)")
-    
-    with col2:
-        interview_date = st.date_input("תאריך הראיון")
-        interview_time = st.time_input("שעה")
+    # שימוש ב-Container כדי לתת קצת "אוויר"
+    with st.container():
+        col1, col2 = st.columns(2)
+        with col1:
+            candidate_name = st.text_input("שם המועמד/ת")
+            phone_number = st.text_input("מספר טלפון (נייד)")
+        
+        with col2:
+            interview_date = st.date_input("תאריך הראיון")
+            interview_time = st.time_input("שעה")
     
     if candidate_name and phone_number:
         # חישוב התאריך והיום
@@ -57,7 +113,7 @@ if menu == "זימון לראיון":
         time_str = interview_time.strftime('%H:%M')
         day_hebrew = get_hebrew_day(interview_date)
         
-        # הודעה מתוקנת עם אשר/י
+        # הודעה
         message_body = (
             f"היי {candidate_name}, זאת תאיר ממשרד עורכי דין י.שפירא.\n"
             f"בהמשך לשיחתנו נקבע ראיון עבודה ליום {day_hebrew} בתאריך ה-{date_str} בשעה {time_str}.\n"
@@ -70,12 +126,23 @@ if menu == "זימון לראיון":
         
         wa_link = create_whatsapp_link(phone_number, message_body)
         
+        # כפתור עם אייקון
         st.markdown(f'''
-            <a href="{wa_link}" target="_blank">
-                <button style="background-color:#25D366; color:white; border:none; padding:10px 20px; border-radius:5px; font-size:16px; cursor:pointer;">
-                    📞 לחץ כאן לשליחה בוואטסאפ
-                </button>
-            </a>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="{wa_link}" target="_blank" style="text-decoration: none;">
+                    <button style="
+                        background-color: #25D366; 
+                        color: white; 
+                        border: none; 
+                        padding: 12px 25px; 
+                        border-radius: 25px; 
+                        font-size: 18px; 
+                        cursor: pointer; 
+                        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);">
+                        📞 לחץ לשליחה בוואטסאפ
+                    </button>
+                </a>
+            </div>
             ''', unsafe_allow_html=True)
 
 # ==========================
@@ -85,7 +152,7 @@ elif menu == "ימי הולדת":
     st.header("🎂 חגיגות יום הולדת")
     
     st.markdown("### 🎥 סרטון יום הולדת")
-    video_link = st.text_input("הדבק כאן קישור לסרטון (YouTube/Drive) שיופיע בכל הברכות:", 
+    video_link = st.text_input("הדבק כאן קישור לסרטון (YouTube/Drive):", 
                                placeholder="למשל: https://youtu.be/abcd123")
     
     st.markdown("---")
@@ -115,12 +182,23 @@ elif menu == "ימי הולדת":
             st.text_area("ההודעה שתשלח:", final_message, height=180)
             
             wa_link_bday = create_whatsapp_link(emp_phone, final_message)
+            
             st.markdown(f'''
-                <a href="{wa_link_bday}" target="_blank">
-                    <button style="background-color:#25D366; color:white; border:none; padding:10px 20px; border-radius:5px; font-size:16px; cursor:pointer;">
-                        🎁 שלח ברכה (+סרטון) בוואטסאפ
-                    </button>
-                </a>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="{wa_link_bday}" target="_blank" style="text-decoration: none;">
+                        <button style="
+                            background-color: #C08497; 
+                            color: white; 
+                            border: none; 
+                            padding: 12px 25px; 
+                            border-radius: 25px; 
+                            font-size: 18px; 
+                            cursor: pointer; 
+                            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);">
+                            🎁 שלח ברכה מעוצבת
+                        </button>
+                    </a>
+                </div>
                 ''', unsafe_allow_html=True)
     else:
         st.warning("עדיין אין עובדים במערכת. עבור ללשונית 'ניהול עובדים' כדי להוסיף.")
@@ -137,6 +215,7 @@ elif menu == "ניהול עובדים":
         new_phone = st.text_input("טלפון")
         new_bday = st.date_input("תאריך לידה", min_value=datetime(1950, 1, 1))
         
+        # כפתור שמירה מעוצב
         submitted = st.form_submit_button("שמור עובד")
         
         if submitted and new_name and new_phone:
