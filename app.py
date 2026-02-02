@@ -12,7 +12,7 @@ VIDEO_URL = "https://youtu.be/j5F708M4by0"
 # --- הגדרות עמוד ---
 st.set_page_config(page_title="Shapira Law HR", layout="wide", page_icon="⚖️")
 
-# --- עיצוב CSS מתקדם (תפריט קבוע + ניקיון) ---
+# --- עיצוב CSS מתקדם (כפתורים במקום עיגולים) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
@@ -64,26 +64,35 @@ st.markdown("""
         padding-bottom: 10px;
     }
 
-    /* כפתורי תפריט */
+    /* --- העלמת העיגול והפיכת האופציות לכפתורים --- */
+    
+    /* העלמת העיגול (Radio Circle) */
+    div[role="radiogroup"] > label > div:first-child {
+        display: none !important;
+    }
+
+    /* עיצוב הכפתור עצמו */
     div[role="radiogroup"] > label {
         background-color: #ffffff;
         border: 1px solid #f1f3f5;
         padding: 15px 20px;
-        border-radius: 10px;
+        border-radius: 12px;
         margin-bottom: 10px;
         transition: all 0.2s;
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         cursor: pointer;
         display: flex;
+        justify-content: center; /* יישור טקסט למרכז */
         align-items: center;
     }
 
     div[role="radiogroup"] > label:hover {
         background-color: #fce4ec;
         border-color: #f8bbd0;
-        transform: translateX(-5px);
+        transform: translateY(-2px);
     }
     
+    /* עיצוב כפתור שנבחר (Active State) */
     div[role="radiogroup"] > label[data-checked="true"] {
         background: linear-gradient(45deg, #d81b60, #ec407a);
         color: white !important;
@@ -96,7 +105,7 @@ st.markdown("""
         font-weight: 700;
     }
 
-    /* כפתורי פעולה */
+    /* כפתורי פעולה (שליחה וכו') */
     .stButton>button {
         background: linear-gradient(45deg, #d81b60, #ff80ab);
         color: white;
