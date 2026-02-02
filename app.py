@@ -15,7 +15,7 @@ st.set_page_config(page_title="Shapira Law HR", layout="centered", page_icon="�
 # --- עיצוב "בוטיק" יוקרתי (CSS Custom Injection) ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
 
     /* איפוס כללי ופונטים */
     html, body, [class*="css"] {
@@ -35,32 +35,34 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
 
+    /* עיצוב כותרת דף הבית */
+    .welcome-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #880e4f;
+        text-align: center;
+        margin-top: 50px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: fadeIn 2s;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.5rem;
+        color: #ad1457;
+        text-align: center;
+        margin-top: -10px;
+        font-weight: 300;
+        animation: fadeIn 3s;
+    }
+
     /* עיצוב הכרטיס המרכזי (הקופסה הלבנה) */
     .css-1r6slb0, .stForm, div[data-testid="stVerticalBlock"] > div {
         background-color: #ffffff;
         border-radius: 20px;
-        padding: 20px;
+        padding: 25px;
         box-shadow: 0 15px 35px rgba(0,0,0,0.05);
         border: 1px solid #fff0f5;
         margin-bottom: 20px;
-    }
-
-    /* כותרות מעוצבות */
-    h1 {
-        font-weight: 800;
-        color: #880e4f;
-        text-align: center;
-        letter-spacing: -1px;
-        margin-bottom: 0px !important;
-        text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
-    }
-    
-    .subtitle {
-        text-align: center;
-        color: #ad1457;
-        font-size: 1.1rem;
-        font-weight: 400;
-        margin-bottom: 30px;
     }
 
     /* כפתורים - גרדיאנט ורוד-זהב */
@@ -81,26 +83,15 @@ st.markdown("""
         transform: translateY(-3px);
         box-shadow: 0 15px 25px rgba(216, 27, 96, 0.3);
     }
-
-    /* שדות קלט נקיים */
-    .stTextInput>div>div>input, .stDateInput>div>div>input {
-        border: 1px solid #fce4ec;
-        background-color: #fffbfc;
-        border-radius: 12px;
-        padding: 10px;
-    }
     
-    .stTextInput>div>div>input:focus {
-        border-color: #ec407a;
-        box-shadow: 0 0 0 2px rgba(236, 64, 122, 0.1);
+    /* אנימציה */
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
     }
 
     </style>
     """, unsafe_allow_html=True)
-
-# --- כותרת ראשית ---
-st.markdown("<h1>HR Manager</h1>", unsafe_allow_html=True)
-st.markdown("<p class='subtitle'>משרד י.שפירא ושות' | פורטל ניהול</p>", unsafe_allow_html=True)
 
 # --- פונקציות עזר ---
 def get_hebrew_day(date_obj):
@@ -134,17 +125,29 @@ def normalize_columns(df):
             mapping[col] = 'תאריך לידה'
     return df.rename(columns=mapping)
 
-# --- תפריט צד ---
+# --- תפריט צד (מוסתר כברירת מחדל בנייד) ---
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2910/2910756.png", width=50) # אייקון קטן ויפה
-    st.markdown("### תפריט ראשי")
-    menu = st.radio("", ["זימון לראיון", "ימי הולדת", "ניהול עובדים"])
+    st.image("https://cdn-icons-png.flaticon.com/512/2910/2910756.png", width=60)
+    st.markdown("### תפריט פעולות")
+    # הוספתי את "דף הבית" כאופציה ראשונה
+    menu = st.radio("", ["דף הבית", "זימון לראיון", "ימי הולדת", "הודעה בתפוצה רחבה", "ניהול עובדים"])
+
+# ==========================
+# מסך 0: דף הבית (Landing Page)
+# ==========================
+if menu == "דף הבית":
+    # הכותרת הגדולה שביקשת
+    st.markdown("<div class='welcome-title'>שלום תאיר! ❤️</div>", unsafe_allow_html=True)
+    st.markdown("<div class='welcome-subtitle'>מה תרצי לעשות היום?</div>", unsafe_allow_html=True)
+    
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.info("👈 לחצי על החץ למעלה בצד ימין כדי לפתוח את התפריט")
 
 # ==========================
 # מסך 1: זימון לראיון
 # ==========================
-if menu == "זימון לראיון":
-    st.markdown("### 📅 פרטי המועמד/ת")
+elif menu == "זימון לראיון":
+    st.markdown("<h2>📅 פרטי המועמד/ת</h2>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
@@ -171,9 +174,7 @@ if menu == "זימון לראיון":
         
         st.markdown(f'''
             <a href="{wa_link}" target="_blank" style="text-decoration: none;">
-                <button>
-                    📞 פתח וואטסאפ לשליחה
-                </button>
+                <button>📞 פתח וואטסאפ לשליחה</button>
             </a>
             ''', unsafe_allow_html=True)
 
@@ -181,13 +182,11 @@ if menu == "זימון לראיון":
 # מסך 2: ימי הולדת
 # ==========================
 elif menu == "ימי הולדת":
-    st.markdown("### 🎂 שליחת ברכה")
+    st.markdown("<h2>🎂 שליחת ברכה</h2>", unsafe_allow_html=True)
     
     df = load_data()
     if not df.empty:
         df['תאריך לידה'] = pd.to_datetime(df['תאריך לידה'], errors='coerce')
-        
-        # בחירה מעוצבת
         employee_names = df['שם העובד'].tolist()
         selected_employee = st.selectbox("למי חוגגים היום?", employee_names)
         
@@ -195,7 +194,6 @@ elif menu == "ימי הולדת":
             emp_data = df[df['שם העובד'] == selected_employee].iloc[0]
             emp_phone = emp_data['טלפון']
             
-            # הסרטון נכנס להודעה אוטומטית
             video_text = f"\n\n🎬 הכנו לך משהו קטן: {VIDEO_URL}"
             
             wishes_options = {
@@ -208,22 +206,42 @@ elif menu == "ימי הולדת":
             st.text_area("תוכן ההודעה:", final_message, height=150)
             wa_link_bday = create_whatsapp_link(emp_phone, final_message)
             
-            st.markdown(f'''
-                <br>
-                <a href="{wa_link_bday}" target="_blank" style="text-decoration: none;">
-                    <button>
-                        🎁 שלח ברכה מעוצבת
-                    </button>
-                </a>
-                ''', unsafe_allow_html=True)
+            st.markdown(f'''<br><a href="{wa_link_bday}" target="_blank" style="text-decoration: none;"><button>🎁 שלח ברכה מעוצבת</button></a>''', unsafe_allow_html=True)
     else:
         st.warning("המאגר ריק. נא לטעון נתונים.")
 
 # ==========================
-# מסך 3: ניהול עובדים (עם עריכה)
+# מסך 3: הודעה בתפוצה רחבה (הפיצ'ר החדש)
+# ==========================
+elif menu == "הודעה בתפוצה רחבה":
+    st.markdown("<h2>📢 שליחת הודעה לכולם</h2>", unsafe_allow_html=True)
+    
+    st.info("💡 טיפ: וואטסאפ לא מאפשר שליחה המונית בלחיצה אחת. הכלי הזה יעזור לך להכין את ההודעה ולהעתיק את מספרי הטלפון ל'רשימת תפוצה' בוואטסאפ.")
+    
+    general_msg = st.text_area("כתבי כאן את ההודעה לכל העובדים:", height=150)
+    
+    if general_msg:
+        st.markdown("### שלב 1: העתקת המספרים")
+        df = load_data()
+        if not df.empty:
+            # יצירת רשימת מספרים מופרדת בפסיקים
+            all_phones = df['טלפון'].astype(str).str.replace('.0', '', regex=False).tolist()
+            phones_text = ",".join(all_phones)
+            
+            st.code(phones_text, language="text")
+            st.caption("העתיקי את המספרים האלו והדביקי אותם ביצירת רשימת תפוצה בוואטסאפ.")
+            
+            st.markdown("### שלב 2: העתקת ההודעה")
+            st.code(general_msg, language="text")
+            
+        else:
+            st.error("אין עובדים ברשימה להצגת מספרים.")
+
+# ==========================
+# מסך 4: ניהול עובדים
 # ==========================
 elif menu == "ניהול עובדים":
-    st.markdown("### 👥 מאגר עובדים")
+    st.markdown("<h2>👥 מאגר עובדים</h2>", unsafe_allow_html=True)
     
     uploaded_file = st.file_uploader("📂 גרירת קובץ אקסל לטעינה מהירה", type=['xlsx', 'xls', 'csv'])
     
@@ -254,7 +272,6 @@ elif menu == "ניהול עובדים":
 
     st.markdown("---")
     st.markdown("#### ✏️ עריכת טבלה")
-    st.info("ניתן לשנות פרטים ישירות בטבלה. אל תשכח ללחוץ 'שמור' בסוף.")
     
     df = load_data()
     edited_df = st.data_editor(
