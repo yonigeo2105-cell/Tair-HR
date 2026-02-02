@@ -4,92 +4,105 @@ from datetime import datetime
 import urllib.parse
 import os
 
-# --- הגדרות עמוד ---
-st.set_page_config(page_title="HR Manager", layout="centered", page_icon="🌸")
+# ==========================================
+# 👇 הקישור הקבוע לסרטון יום ההולדת 👇
+# ==========================================
+VIDEO_URL = "https://youtu.be/j5F708M4by0"
 
-# --- עיצוב יוקרתי ונקי (Clean & Chic) ---
+# --- הגדרות עמוד ---
+st.set_page_config(page_title="Shapira Law HR", layout="centered", page_icon="⚖️")
+
+# --- עיצוב "בוטיק" יוקרתי (CSS Custom Injection) ---
 st.markdown("""
     <style>
-    /* פונט נקי */
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap');
 
+    /* איפוס כללי ופונטים */
     html, body, [class*="css"] {
-        font-family: 'Rubik', sans-serif;
+        font-family: 'Assistant', sans-serif;
         direction: rtl;
+        color: #4a4a4a;
     }
 
-    /* רקע נקי ואלגנטי */
+    /* רקע האפליקציה - ורוד פנינה יוקרתי */
     .stApp {
-        background-color: #fdfbfd;
-        background-image: radial-gradient(#f3e5f5 1px, transparent 1px);
-        background-size: 20px 20px;
-    }
-
-    /* כותרות */
-    h1 {
-        color: #880e4f;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 0px;
+        background-color: #fdfbfb;
+        background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
     }
     
-    h3 {
-        color: #bc477b;
-        text-align: center;
-        font-weight: 300;
-        margin-top: -10px;
-        font-size: 1.2rem;
-    }
+    /* הסתרת כותרות ברירת מחדל של סטרימליט */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
 
-    /* קופסאות (Cards) */
-    .css-1r6slb0, .stForm {
+    /* עיצוב הכרטיס המרכזי (הקופסה הלבנה) */
+    .css-1r6slb0, .stForm, div[data-testid="stVerticalBlock"] > div {
         background-color: #ffffff;
-        padding: 25px;
         border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.03);
-        border: 1px solid #fce4ec;
+        padding: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        border: 1px solid #fff0f5;
+        margin-bottom: 20px;
     }
 
-    /* כפתורים משודרגים */
+    /* כותרות מעוצבות */
+    h1 {
+        font-weight: 800;
+        color: #880e4f;
+        text-align: center;
+        letter-spacing: -1px;
+        margin-bottom: 0px !important;
+        text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+    }
+    
+    .subtitle {
+        text-align: center;
+        color: #ad1457;
+        font-size: 1.1rem;
+        font-weight: 400;
+        margin-bottom: 30px;
+    }
+
+    /* כפתורים - גרדיאנט ורוד-זהב */
     .stButton>button {
-        background: linear-gradient(135deg, #ec407a 0%, #c2185b 100%);
+        background: linear-gradient(45deg, #d81b60, #ff80ab);
         color: white;
-        border-radius: 12px;
         border: none;
-        padding: 12px 24px;
-        font-weight: 500;
+        border-radius: 50px;
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: 600;
+        box-shadow: 0 10px 20px rgba(216, 27, 96, 0.2);
+        transition: all 0.3s ease;
         width: 100%;
-        box-shadow: 0 4px 10px rgba(233, 30, 99, 0.2);
-        transition: transform 0.2s;
     }
     
     .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 15px rgba(233, 30, 99, 0.3);
-        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(216, 27, 96, 0.3);
     }
 
-    /* שדות קלט */
-    .stTextInput input, .stDateInput input, .stTimeInput input {
-        border-radius: 10px;
-        border: 1px solid #e1bee7;
+    /* שדות קלט נקיים */
+    .stTextInput>div>div>input, .stDateInput>div>div>input {
+        border: 1px solid #fce4ec;
+        background-color: #fffbfc;
+        border-radius: 12px;
         padding: 10px;
     }
     
-    /* הסתרת אלמנטים מיותרים */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    
+    .stTextInput>div>div>input:focus {
+        border-color: #ec407a;
+        box-shadow: 0 0 0 2px rgba(236, 64, 122, 0.1);
+    }
+
     </style>
     """, unsafe_allow_html=True)
 
-# --- לוגו וכותרת ---
-st.markdown("<h1>HR Manager 🌸</h1>", unsafe_allow_html=True)
-st.markdown("<h3>משרד י.שפירא ושות'</h3>", unsafe_allow_html=True)
-st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+# --- כותרת ראשית ---
+st.markdown("<h1>HR Manager</h1>", unsafe_allow_html=True)
+st.markdown("<p class='subtitle'>משרד י.שפירא ושות' | פורטל ניהול</p>", unsafe_allow_html=True)
 
 # --- פונקציות עזר ---
-
 def get_hebrew_day(date_obj):
     days = {0: "ב'", 1: "ג'", 2: "ד'", 3: "ה'", 4: "ו'", 5: "שבת", 6: "א'"}
     return days[date_obj.weekday()]
@@ -103,7 +116,6 @@ def create_whatsapp_link(phone, message):
 
 def load_data():
     if os.path.exists('employees.csv'):
-        # קריאה עם המרת טלפון לטקסט
         return pd.read_csv('employees.csv', dtype={'טלפון': str})
     return pd.DataFrame(columns=["שם העובד", "תאריך לידה", "טלפון"])
 
@@ -122,25 +134,25 @@ def normalize_columns(df):
             mapping[col] = 'תאריך לידה'
     return df.rename(columns=mapping)
 
-# --- תפריט צד נקי ---
+# --- תפריט צד ---
 with st.sidebar:
-    st.markdown("### 🌸 תפריט")
+    st.image("https://cdn-icons-png.flaticon.com/512/2910/2910756.png", width=50) # אייקון קטן ויפה
+    st.markdown("### תפריט ראשי")
     menu = st.radio("", ["זימון לראיון", "ימי הולדת", "ניהול עובדים"])
 
 # ==========================
 # מסך 1: זימון לראיון
 # ==========================
 if menu == "זימון לראיון":
-    st.subheader("📅 זימון מועמד לראיון")
+    st.markdown("### 📅 פרטי המועמד/ת")
     
-    with st.container():
-        col1, col2 = st.columns(2)
-        with col1:
-            candidate_name = st.text_input("שם המועמד/ת")
-            phone_number = st.text_input("מספר טלפון")
-        with col2:
-            interview_date = st.date_input("תאריך הראיון")
-            interview_time = st.time_input("שעה")
+    col1, col2 = st.columns(2)
+    with col1:
+        candidate_name = st.text_input("שם מלא")
+        phone_number = st.text_input("נייד")
+    with col2:
+        interview_date = st.date_input("תאריך הראיון")
+        interview_time = st.time_input("שעה")
     
     if candidate_name and phone_number:
         date_str = interview_date.strftime('%d/%m')
@@ -155,23 +167,11 @@ if menu == "זימון לראיון":
         )
         
         st.markdown("---")
-        st.markdown("**תצוגה מקדימה:**")
-        st.text_area("", message_body, height=120)
-        
         wa_link = create_whatsapp_link(phone_number, message_body)
         
         st.markdown(f'''
-            <br>
-            <a href="{wa_link}" target="_blank" style="text-decoration: none; display: flex; justify-content: center;">
-                <button style="
-                    background: #25D366; 
-                    color: white; 
-                    border: none; 
-                    padding: 12px 30px; 
-                    border-radius: 50px; 
-                    font-size: 18px; 
-                    cursor: pointer; 
-                    box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);">
+            <a href="{wa_link}" target="_blank" style="text-decoration: none;">
+                <button>
                     📞 פתח וואטסאפ לשליחה
                 </button>
             </a>
@@ -181,65 +181,51 @@ if menu == "זימון לראיון":
 # מסך 2: ימי הולדת
 # ==========================
 elif menu == "ימי הולדת":
-    st.subheader("🎂 חגיגות יום הולדת")
-    
-    with st.expander("🎥 לחצי כאן להגדרת קישור לסרטון"):
-        video_link = st.text_input("קישור לסרטון:", placeholder="https://youtu.be/...")
+    st.markdown("### 🎂 שליחת ברכה")
     
     df = load_data()
     if not df.empty:
         df['תאריך לידה'] = pd.to_datetime(df['תאריך לידה'], errors='coerce')
         
-        # אזור בחירה
-        st.markdown("<br>", unsafe_allow_html=True)
+        # בחירה מעוצבת
         employee_names = df['שם העובד'].tolist()
-        selected_employee = st.selectbox("למי חוגגים?", employee_names)
+        selected_employee = st.selectbox("למי חוגגים היום?", employee_names)
         
         if selected_employee:
             emp_data = df[df['שם העובד'] == selected_employee].iloc[0]
             emp_phone = emp_data['טלפון']
-            video_text = f"\n\n🎬 הכנו לך משהו קטן: {video_link}" if video_link else ""
             
-            st.markdown("**בחר סגנון:**")
+            # הסרטון נכנס להודעה אוטומטית
+            video_text = f"\n\n🎬 הכנו לך משהו קטן: {VIDEO_URL}"
+            
             wishes_options = {
                 "רשמי": f"מזל טוב {selected_employee}! 🎉\nיום הולדת שמח! מאחלים לך שנה של צמיחה, הצלחות והמון רגעים מאושרים.\nשמחים שאת/ה חלק מהצוות שלנו.\n\nאוהבים משרד י.שפירא ושות' עורכי דין{video_text}",
                 "משפחתי": f"היי {selected_employee}, המון מזל טוב ליום ההולדת! 🎂\nשתהיה שנה מדהימה, מלאה בכיף ובשורות טובות.\n\nאוהבים משרד י.שפירא ושות' עורכי דין{video_text}",
             }
-            wishes_type = st.radio("", list(wishes_options.keys()), horizontal=True, label_visibility="collapsed")
+            wishes_type = st.radio("סגנון הברכה:", list(wishes_options.keys()), horizontal=True)
             final_message = wishes_options[wishes_type]
             
-            st.text_area("", final_message, height=180)
+            st.text_area("תוכן ההודעה:", final_message, height=150)
             wa_link_bday = create_whatsapp_link(emp_phone, final_message)
             
             st.markdown(f'''
                 <br>
-                <a href="{wa_link_bday}" target="_blank" style="text-decoration: none; display: flex; justify-content: center;">
-                    <button style="
-                        background: linear-gradient(135deg, #ec407a 0%, #c2185b 100%);
-                        color: white; 
-                        border: none; 
-                        padding: 12px 40px; 
-                        border-radius: 50px; 
-                        font-size: 18px; 
-                        cursor: pointer; 
-                        box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);">
-                        🎁 שלח ברכה
+                <a href="{wa_link_bday}" target="_blank" style="text-decoration: none;">
+                    <button>
+                        🎁 שלח ברכה מעוצבת
                     </button>
                 </a>
                 ''', unsafe_allow_html=True)
     else:
-        st.warning("אין נתונים. נא לטעון קובץ ב'ניהול עובדים'.")
+        st.warning("המאגר ריק. נא לטעון נתונים.")
 
 # ==========================
-# מסך 3: ניהול עובדים (עם עריכה חיה)
+# מסך 3: ניהול עובדים (עם עריכה)
 # ==========================
 elif menu == "ניהול עובדים":
-    st.subheader("👥 ניהול מאגר עובדים")
+    st.markdown("### 👥 מאגר עובדים")
     
-    st.info("💡 חדש: ניתן לערוך את פרטי העובדים ישירות בתוך הטבלה למטה! בסיום העריכה יש ללחוץ על הכפתור 'שמור שינויים'.")
-    
-    # אזור העלאת קובץ
-    uploaded_file = st.file_uploader("טעינת קובץ אקסל ראשוני", type=['xlsx', 'xls', 'csv'])
+    uploaded_file = st.file_uploader("📂 גרירת קובץ אקסל לטעינה מהירה", type=['xlsx', 'xls', 'csv'])
     
     if uploaded_file is not None:
         try:
@@ -259,24 +245,21 @@ elif menu == "ניהול עובדים":
                 combined_df = pd.concat([existing_df, new_df]).drop_duplicates(subset=['שם העובד', 'טלפון'], keep='last')
                 
                 save_data(combined_df)
-                st.success(f"נטענו {len(new_df)} רשומות חדשות!")
+                st.success(f"✅ רשימת העובדים עודכנה! ({len(new_df)} רשומות)")
                 st.rerun()
             else:
-                st.error("הקובץ לא תקין. חסרות עמודות: שם, טלפון, תאריך לידה.")
+                st.error("⚠️ מבנה הקובץ שגוי. חובה עמודות: שם, טלפון, תאריך לידה.")
         except Exception as e:
             st.error(f"שגיאה: {e}")
 
     st.markdown("---")
-    
-    # --- עריכת הטבלה (הפיצ'ר החדש) ---
-    st.markdown("### ✏️ עריכת הרשימה")
+    st.markdown("#### ✏️ עריכת טבלה")
+    st.info("ניתן לשנות פרטים ישירות בטבלה. אל תשכח ללחוץ 'שמור' בסוף.")
     
     df = load_data()
-    
-    # טבלה עריכה אינטראקטיבית
     edited_df = st.data_editor(
         df,
-        num_rows="dynamic",  # מאפשר להוסיף ולמחוק שורות
+        num_rows="dynamic",
         column_config={
             "שם העובד": st.column_config.TextColumn("שם מלא", required=True),
             "טלפון": st.column_config.TextColumn("טלפון", required=True),
@@ -286,8 +269,6 @@ elif menu == "ניהול עובדים":
         hide_index=True
     )
 
-    # כפתור שמירה בולט
-    if st.button("💾 שמור את כל השינויים בטבלה", type="primary"):
+    if st.button("💾 שמור שינויים"):
         save_data(edited_df)
-        st.balloons()
         st.success("הנתונים נשמרו בהצלחה!")
