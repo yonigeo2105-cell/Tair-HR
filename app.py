@@ -12,7 +12,7 @@ VIDEO_URL = "https://youtu.be/j5F708M4by0"
 # --- הגדרות עמוד ---
 st.set_page_config(page_title="Shapira Law HR", layout="wide", page_icon="⚖️")
 
-# --- עיצוב CSS מתקדם (תפריט קבוע) ---
+# --- עיצוב CSS מתקדם (תפריט קבוע + ניקיון) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
@@ -24,17 +24,15 @@ st.markdown("""
         background-color: #f8f9fa;
     }
 
-    /* הסתרת האלמנטים המובנים של סטרימליט כדי לקבל מראה נקי */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
 
-    /* עיצוב עמודות */
     div[data-testid="column"] {
         background-color: transparent;
     }
 
-    /* עיצוב עמודת התפריט (צד ימין) */
+    /* עיצוב עמודת התפריט */
     .menu-container {
         background-color: #ffffff;
         padding: 20px;
@@ -44,7 +42,6 @@ st.markdown("""
         height: 100%;
     }
     
-    /* כותרות */
     h1 {
         color: #880e4f;
         font-weight: 800;
@@ -67,7 +64,7 @@ st.markdown("""
         padding-bottom: 10px;
     }
 
-    /* עיצוב כפתורי הבחירה (Radio Buttons) שייראו כמו תפריט */
+    /* כפתורי תפריט */
     div[role="radiogroup"] > label {
         background-color: #ffffff;
         border: 1px solid #f1f3f5;
@@ -87,7 +84,6 @@ st.markdown("""
         transform: translateX(-5px);
     }
     
-    /* סימון הפריט הנבחר */
     div[role="radiogroup"] > label[data-checked="true"] {
         background: linear-gradient(45deg, #d81b60, #ec407a);
         color: white !important;
@@ -100,7 +96,7 @@ st.markdown("""
         font-weight: 700;
     }
 
-    /* כפתורי פעולה (שליחה) */
+    /* כפתורי פעולה */
     .stButton>button {
         background: linear-gradient(45deg, #d81b60, #ff80ab);
         color: white;
@@ -163,12 +159,11 @@ def normalize_columns(df):
             mapping[col] = 'תאריך לידה'
     return df.rename(columns=mapping)
 
-# --- פריסת עמוד (Layout) ---
-# יצירת שתי עמודות: ימין לתפריט (קטן), שמאל לתוכן (גדול)
+# --- פריסת עמוד ---
 menu_col, content_col = st.columns([1, 4])
 
 # ==========================
-# צד ימין: תפריט קבוע
+# תפריט (ימין)
 # ==========================
 with menu_col:
     st.markdown("""
@@ -178,41 +173,28 @@ with menu_col:
         </div>
     """, unsafe_allow_html=True)
     
-    # תפריט הניווט (כפתורי רדיו מעוצבים)
     selected_page = st.radio(
         "",
         ["דף הבית", "זימון לראיון", "ימי הולדת", "הודעה בתפוצה רחבה", "ניהול עובדים"],
         label_visibility="collapsed"
     )
-    
-    st.markdown("---")
-    st.caption("מערכת ניהול משרדית v2.0")
 
 # ==========================
-# צד שמאל: תוכן משתנה
+# תוכן (שמאל)
 # ==========================
 with content_col:
-    # שימוש ב-Container כדי לתחום את התוכן במסגרת יפה
     with st.container():
         st.markdown('<div class="content-box">', unsafe_allow_html=True)
 
-        # --- לוגיקה של העמודים ---
-        
         if selected_page == "דף הבית":
             st.markdown("""
-                <div style="text-align: center; padding: 50px;">
-                    <h1 style="font-size: 3rem;">שלום תאיר! 👋</h1>
-                    <h3 style="font-size: 1.5rem; margin-top: 10px;">ברוכה הבאה למשרד הדיגיטלי.</h3>
-                    <br>
-                    <p style="color: #666; font-size: 1.1rem;">
-                        התפריט מימינך (או למעלה בנייד) פתוח תמיד לשירותך.<br>
-                        בחרי פעולה כדי להתחיל.
-                    </p>
+                <div style="text-align: center; padding: 100px 0;">
+                    <h1 style="font-size: 3.5rem; color: #880e4f;">שלום תאיר! 👋</h1>
                 </div>
             """, unsafe_allow_html=True)
 
         elif selected_page == "זימון לראיון":
-            st.markdown("<h2>📅 זימון מועמד לראיון</h2>", unsafe_allow_html=True)
+            st.markdown("<h2>📅 זימון מועמד</h2>", unsafe_allow_html=True)
             
             c1, c2 = st.columns(2)
             with c1:
@@ -234,13 +216,12 @@ with content_col:
                     f"לכל שאלה אני זמינה במספר הזה, אנא אשר/י את קבלת ההודעה."
                 )
                 
-                st.info("תצוגה מקדימה:")
-                st.text(message_body)
+                st.text_area("תצוגה מקדימה:", message_body, height=130)
                 wa_link = create_whatsapp_link(phone_number, message_body)
                 st.markdown(f'''<a href="{wa_link}" target="_blank" style="text-decoration: none;"><button>📞 שליחה בוואטסאפ</button></a>''', unsafe_allow_html=True)
 
         elif selected_page == "ימי הולדת":
-            st.markdown("<h2>🎂 ברכת יום הולדת</h2>", unsafe_allow_html=True)
+            st.markdown("<h2>🎂 שליחת ברכה</h2>", unsafe_allow_html=True)
             
             df = load_data()
             if not df.empty:
@@ -252,7 +233,6 @@ with content_col:
                 if selected:
                     emp_data = df[df['שם העובד'] == selected].iloc[0]
                     emp_phone = emp_data['טלפון']
-                    
                     video_text = f"\n\n🎬 הכנו לך משהו קטן: {VIDEO_URL}"
                     
                     types = {
@@ -266,11 +246,10 @@ with content_col:
                     wa_link = create_whatsapp_link(emp_phone, msg)
                     st.markdown(f'''<a href="{wa_link}" target="_blank" style="text-decoration: none;"><button>🎁 שליחה בוואטסאפ</button></a>''', unsafe_allow_html=True)
             else:
-                st.warning("המאגר ריק. יש לטעון עובדים.")
+                st.warning("המאגר ריק.")
 
         elif selected_page == "הודעה בתפוצה רחבה":
-            st.markdown("<h2>📢 הודעה לכל העובדים</h2>", unsafe_allow_html=True)
-            st.info("כאן מעתיקים את כל המספרים כדי לפתוח 'רשימת תפוצה' בוואטסאפ.")
+            st.markdown("<h2>📢 שליחה לכולם</h2>", unsafe_allow_html=True)
             
             msg = st.text_area("תוכן ההודעה:", height=100)
             
@@ -280,9 +259,9 @@ with content_col:
                     phones = df['טלפון'].astype(str).str.replace('.0', '', regex=False).tolist()
                     phones_str = ",".join(phones)
                     
-                    st.markdown("1. העתקי את המספרים:")
+                    st.markdown("1. העתקי מספרים:")
                     st.code(phones_str, language="text")
-                    st.markdown("2. העתקי את ההודעה:")
+                    st.markdown("2. העתקי הודעה:")
                     st.code(msg, language="text")
                 else:
                     st.error("אין נתונים.")
@@ -305,15 +284,14 @@ with content_col:
                         exist = load_data()
                         combo = pd.concat([exist, new]).drop_duplicates(subset=['שם העובד', 'טלפון'], keep='last')
                         save_data(combo)
-                        st.success(f"עודכן בהצלחה! ({len(new)} רשומות)")
+                        st.success(f"עודכן ({len(new)} רשומות)")
                         st.rerun()
                     else:
-                        st.error("חסרות עמודות: שם, טלפון, תאריך לידה")
+                        st.error("קובץ לא תקין")
                 except Exception as e:
                     st.error(f"שגיאה: {e}")
             
             st.markdown("---")
-            st.markdown("### ✏️ עריכה חיה")
             
             df = load_data()
             edited = st.data_editor(
@@ -328,8 +306,8 @@ with content_col:
                 hide_index=True
             )
             
-            if st.button("💾 שמור שינויים"):
+            if st.button("💾 שמירה"):
                 save_data(edited)
                 st.success("נשמר!")
 
-        st.markdown('</div>', unsafe_allow_html=True) # סגירת ה-div של התוכן
+        st.markdown('</div>', unsafe_allow_html=True)
